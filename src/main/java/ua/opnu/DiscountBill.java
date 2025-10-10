@@ -1,8 +1,8 @@
 package ua.opnu;
 
-import ua.opnu.java.inheritance.Employee;
-import ua.opnu.java.inheritance.GroceryBill;
-import ua.opnu.java.inheritance.Item;
+import ua.opnu.java.inheritance.bill.Employee;
+import ua.opnu.java.inheritance.bill.GroceryBill;
+import ua.opnu.java.inheritance.bill.Item;
 
 public class DiscountBill extends GroceryBill {
   private final boolean regularCustomer;
@@ -29,9 +29,7 @@ public class DiscountBill extends GroceryBill {
   @Override
   public double getTotal() {
     double full = super.getTotal();
-    if (!regularCustomer) {
-      return full;
-    }
+    if (!regularCustomer) return full;
     return full - discountAmount;
   }
 
@@ -44,13 +42,9 @@ public class DiscountBill extends GroceryBill {
   }
 
   public double getDiscountPercent() {
-    if (!regularCustomer) {
-      return 0.0;
-    }
+    if (!regularCustomer) return 0.0;
     double full = super.getTotal();
-    if (full <= 0.0) {
-      return 0.0;
-    }
+    if (full <= 0.0) return 0.0;
     double paid = full - discountAmount;
     return 100.0 - (paid * 100.0) / full;
   }
