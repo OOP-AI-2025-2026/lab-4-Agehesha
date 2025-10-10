@@ -27,10 +27,11 @@ public class Point3D extends Point {
 
 
   public void move(int dx, int dy, int dz) {
-    super.move(dx, dy); 
+
+    setX(getX() + dx);
+    setY(getY() + dy);
     this.z += dz;
   }
-
 
   public double distance(Point3D p) {
     int dx = getX() - p.getX();
@@ -38,7 +39,6 @@ public class Point3D extends Point {
     int dz = z - p.z;
     return Math.sqrt((double) dx * dx + (double) dy * dy + (double) dz * dz);
   }
-
 
   public double distance() {
     int x = getX();
