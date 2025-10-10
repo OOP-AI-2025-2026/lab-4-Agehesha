@@ -1,74 +1,120 @@
-package ua.opnu;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
-public class DiscountBill extends GroceryBill {
-
-  private final boolean regularCustomer;
-  private final List<Item> items = new ArrayList<>();
-
-  private int discountCount;
-  private double discountAmount;
-  private double fullTotal;
-  private double payTotal;
-
-  public DiscountBill(Employee clerk, boolean regularCustomer) {
-    super(clerk);
-    this.regularCustomer = regularCustomer;
-  }
-
-  @Override
-  public void add(Item item) {
-    if (item == null) {
-      return;
+class Item {
+    private String name;
+    private double price;
+    private double discount;
+    
+    public Item(String name, double price, double discount) {
+        this.name = name;
+        this.price = price;
+        this.discount = discount;
     }
-    super.add(item); 
-    items.add(item);
-
-    double price = item.getPrice();
-    double disc = regularCustomer ? extractDiscount(item) : 0.0;
-
-    fullTotal += price;
-    payTotal += price - Math.max(0.0, disc);
-
-    if (disc > 0.0) {
-      discountCount++;
-      discountAmount += disc;
+    
+    public String getName() {
+        return name;
     }
-  }
-
-  private double extractDiscount(Item item) {
-    try {
-      Method m = item.getClass().getMethod("getDiscount");
-      Object v = m.invoke(item);
-      if (v instanceof Number) {
-        double d = ((Number) v).doubleValue();
-        return d < 0 ? 0.0 : d;
-      }
-    } catch (Exception ignored) {
+    
+    public double getPrice() {
+        return price;
     }
-    return 0.0;
-  }
-
-  @Override
-  public double getTotal() {
-    return regularCustomer ? payTotal : fullTotal;
-  }
-
-  public int getDiscountCount() {
-    return regularCustomer ? discountCount : 0;
-  }
-
-  public double getDiscountAmount() {
-    return regularCustomer ? discountAmount : 0.0;
-  }
-
-  public double getDiscountPercent() {
-    if (!regularCustomer || fullTotal <= 0.0) {
-      return 0.0;
+    
+    public double getDiscount() {
+        return discount;
     }
-    return 100.0 - (getTotal() * 100.0) / fullTotal;
-  }
+}
+
+class Employee {
+    private String name;
+    
+    public Employee(String name) {
+        this.name = name;
+    }
+    
+    public String getName() {
+        return name;
+    }
+}
+
+class GroceryBill {
+    private Employee clerk;
+    private java.util.ArrayList<Item> items;
+    
+    public GroceryBill(Employee clerk) {
+        this.clerk = clerk;
+        this.items = new java.util.ArrayList<>();
+    }
+    
+    public void add(Item item) {
+        items.add(item);
+    }
+    
+    public double getTotal() {
+        double total = 0.0;
+        for (Item item : items) {
+            total += item.getPrice();
+        }
+        return total;
+    }
+    
+    public Employee getClerk() {
+        return clerk;
+    }
+    
+    public java.util.ArrayList<Item> getItems() {
+        return items;
+    }
+    
+    public void printReceipt() {
+        System.out.println("Items:");
+        for (Item item : items) {
+            System.out.printf("%s: %.2f грн\n", item.getName(), item.getPrice());
+        }
+        System.out.printf("Total: %.2f грн\n", getTotal());
+    }
+}
+
+class DiscountBill extends GroceryBill {
+    private boolean regularCustomer;
+    private int discountCount;
+    private double totalDiscount;
+    
+    public DiscountBill(Employee clerk, boolean regularCustomer) {
+        super(clerk);
+        this.regularCustomer = regularCustomer;
+        this.discountCount = 0;
+        this.totalDiscount = 0.0;
+    }
+    
+    @Override
+    public void add(Item item) {
+        super.add(item);
+        if (regularCustomer && item.getDiscount() > 0.0) {
+            discountCount++;
+            totalDiscount += item.getDiscount();
+        }
+    }
+    
+    @Override
+    public double getTotal() {
+        if (!regularCustomer) {
+            return super.getTotal();
+        }
+        return super.getTotal() - totalDiscount;
+    }
+    
+    public int getDiscountCount() {
+        return discountCount;
+    }
+    
+    public double getDiscountAmount() {
+        return totalDiscount;
+    }
+    
+    public double getDiscountPercent() {
+        double totalWithoutDiscount = super.getTotal();
+        if (totalWithoutDiscount == 0.0) {
+            return 0.0;
+        }
+        return 100 - (getTotal() * 100) / totalWithoutDiscount;
+    }
 }
