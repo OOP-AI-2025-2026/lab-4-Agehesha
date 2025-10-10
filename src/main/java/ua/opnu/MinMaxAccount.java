@@ -1,46 +1,50 @@
 package ua.opnu;
 
-import ua.opnu.java.inheritance.BankingAccount;
-import ua.opnu.java.inheritance.Startup;
+import ua.opnu.java.inheritance.Point;
 
-public class MinMaxAccount extends BankingAccount {
-  private int min;
-  private int max;
+public class Point3D extends Point {
+  private int z;
 
-  public MinMaxAccount(Startup s) {
-    super(s);
-    int bal = getBalance();
-    this.min = bal;
-    this.max = bal;
+  public Point3D() {
+    super(0, 0);
+    this.z = 0;
+  }
+
+  public Point3D(int x, int y, int z) {
+    super(x, y);
+    this.z = z;
+  }
+
+  public void setLocation(int x, int y, int z) {
+    super.setLocation(x, y);
+    this.z = z;
   }
 
   @Override
-  public void credit(int amount) {
-    super.credit(amount);
-    updateMinMax();
+  public void setLocation(int x, int y) {
+    super.setLocation(x, y);
+    this.z = 0;
+  }
+
+  public double distance(Point3D p) {
+    int dx = getX() - p.getX();
+    int dy = getY() - p.getY();
+    int dz = this.z - p.z;
+    return Math.sqrt((long) dx * dx + (long) dy * dy + (long) dz * dz);
   }
 
   @Override
-  public void debit(int amount) {
-    super.debit(amount);
-    updateMinMax();
+  public double distanceFromOrigin() {
+    return Math.sqrt(
+        (long) getX() * getX() + (long) getY() * getY() + (long) z * z);
   }
 
-  private void updateMinMax() {
-    int bal = getBalance();
-    if (bal < min) {
-      min = bal;
-    }
-    if (bal > max) {
-      max = bal;
-    }
+  public int getZ() {
+    return z;
   }
 
-  public int getMin() {
-    return min;
-  }
-
-  public int getMax() {
-    return max;
+  @Override
+  public String toString() {
+    return "(" + getX() + ", " + getY() + ", " + z + ")";
   }
 }
