@@ -4,49 +4,46 @@ import ua.opnu.java.inheritance.bill.Employee;
 import ua.opnu.java.inheritance.bill.GroceryBill;
 import ua.opnu.java.inheritance.bill.Item;
 
-
+/**
+ * Вариант из классического задания: если клиент preferred,
+ * то скидки применяются и считаются статистики.
+ */
 public class DiscountBill extends GroceryBill {
+    private final boolean preferred;
+    private int discountCount = 0;
+    private double discountAmount = 0.0;
 
-  private final boolean preferred;
-  private int discountCount;
-  private double discountAmount;
-
-  public DiscountBill(Employee cashier, boolean preferred) {
-    super(cashier);
-    this.preferred = preferred;
-  }
-
-  @Override
-  public void add(Item item) {
-    super.add(item);
-    if (preferred && item.getDiscount() > 0.0) {
-      discountCount++;
-      discountAmount += item.getDiscount();
+    public DiscountBill(Employee clerk, boolean preferred) {
+        super(clerk);
+        this.preferred = preferred;
     }
-  }
 
-  @Override
-  public double getTotal() {
-    double base = super.getTotal();
-    return preferred ? base - discountAmount : base;
-  }
-
- 
-  public int getDiscountCount() {
-    return preferred ? discountCount : 0;
-  }
-
-
-  public double getDiscountAmount() {
-    return preferred ? discountAmount : 0.0;
-  }
-
-
-  public double getDiscountPercent() {
-    double base = super.getTotal();
-    if (!preferred || base <= 0.0) {
-      return 0.0;
+    @Override
+    public void add(Item i) {
+        super.add(i);
+        if (preferred) {
+            double d = getItemDiscount(i);
+            if (d > 0) {
+                discountCount++;
+                discountAmount += d;
+            }
+        }
     }
-    return (discountAmount / base) * 100.0;
-  }
-}
+
+    /** Полная сумма с учётом статуса preferred. */
+    @Override
+    public double getTotal() {
+        double total = super.getTotal();
+        return preferred ? (total - discountAmount) : total;
+    }
+
+    public int getDiscountCount() { return discountCount; }
+    public double getDiscountAmount() { return discountAmount; }
+
+    /** Процент скидки относительно суммы без скидки. */
+    public double getDiscountPercent() {
+        double total = super.getTotal();
+        return total == 0.0 ? 0.0 : (discountAmount / total) * 100.0;
+    }
+
+    /** Универсально берём скидку из Item (
