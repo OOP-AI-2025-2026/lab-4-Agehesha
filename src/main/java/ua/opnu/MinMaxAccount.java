@@ -1,7 +1,7 @@
 package ua.opnu;
 
-import ua.opnu.java.inheritance.BankingAccount;
-import ua.opnu.java.inheritance.Startup;
+import ua.opnu.java.inheritance.account.BankingAccount;
+import ua.opnu.java.inheritance.account.Startup;
 
 public class MinMaxAccount extends BankingAccount {
   private int min;
@@ -28,19 +28,10 @@ public class MinMaxAccount extends BankingAccount {
 
   private void updateMinMax() {
     int bal = getBalance();
-    if (bal < min) {
-      min = bal;
-    }
-    if (bal > max) {
-      max = bal;
-    }
+    if (bal < min) min = bal;
+    if (bal > max) max = bal;
   }
 
-  public int getMin() {
-    return min;
-  }
-
-  public int getMax() {
-    return max;
-  }
+  public int getMin() { return min; }
+  public int getMax() { return max; }
 }
