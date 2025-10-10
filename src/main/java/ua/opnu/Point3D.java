@@ -1,6 +1,6 @@
 package ua.opnu;
 
-import ua.opnu.java.inheritance.Point;
+import ua.opnu.java.inheritance.point.Point;
 
 public class Point3D extends Point {
   private int z;
@@ -23,7 +23,7 @@ public class Point3D extends Point {
   @Override
   public void setLocation(int x, int y) {
     super.setLocation(x, y);
-    this.z = 0;
+    this.z = 0; 
   }
 
   public double distance(Point3D p) {
@@ -39,9 +39,7 @@ public class Point3D extends Point {
         (long) getX() * getX() + (long) getY() * getY() + (long) z * z);
   }
 
-  public int getZ() {
-    return z;
-  }
+  public int getZ() { return z; }
 
   @Override
   public String toString() {
