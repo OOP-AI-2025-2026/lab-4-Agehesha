@@ -1,8 +1,8 @@
 package ua.opnu;
 
-import ua.opnu.java.inheritance.bill.Employee;
 import ua.opnu.java.inheritance.bill.GroceryBill;
 import ua.opnu.java.inheritance.bill.Item;
+import ua.opnu.java.inheritance.bill.Employee;
 
 public class DiscountBill extends GroceryBill {
   private final boolean regularCustomer;
