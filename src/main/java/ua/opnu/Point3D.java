@@ -1,11 +1,13 @@
 package ua.opnu;
 
-public class Point3D extends Point {
+import ua.opnu.java.inheritance.Point;
 
+public class Point3D extends Point {
   private int z;
 
   public Point3D() {
-    this(0, 0, 0);
+    super(0, 0);
+    this.z = 0;
   }
 
   public Point3D(int x, int y, int z) {
@@ -24,23 +26,21 @@ public class Point3D extends Point {
     this.z = 0;
   }
 
-  public int getZ() {
-    return z;
-  }
-
   public double distance(Point3D p) {
-    long dx = (long) getX() - p.getX();
-    long dy = (long) getY() - p.getY();
-    long dz = (long) this.z - p.z;
-    return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    int dx = getX() - p.getX();
+    int dy = getY() - p.getY();
+    int dz = this.z - p.z;
+    return Math.sqrt((long) dx * dx + (long) dy * dy + (long) dz * dz);
   }
 
   @Override
   public double distanceFromOrigin() {
-    long lx = getX();
-    long ly = getY();
-    long lz = z;
-    return Math.sqrt(lx * lx + ly * ly + lz * lz);
+    return Math.sqrt(
+        (long) getX() * getX() + (long) getY() * getY() + (long) z * z);
+  }
+
+  public int getZ() {
+    return z;
   }
 
   @Override
