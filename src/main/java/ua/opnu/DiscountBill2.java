@@ -1,50 +1,48 @@
 package ua.opnu;
 
+import ua.opnu.java.inheritance.bill.Employee;
 import ua.opnu.java.inheritance.bill.GroceryBill;
 import ua.opnu.java.inheritance.bill.Item;
-import ua.opnu.java.inheritance.bill.Employee;
+
 
 public class DiscountBill2 {
+
   private final GroceryBill bill;
-  private final boolean regularCustomer;
+  private final boolean preferred;
   private int discountCount;
   private double discountAmount;
 
-  public DiscountBill2(Employee clerk, boolean regularCustomer) {
-    this.bill = new GroceryBill(clerk);
-    this.regularCustomer = regularCustomer;
+  public DiscountBill2(Employee cashier, boolean preferred) {
+    this.bill = new GroceryBill(cashier);
+    this.preferred = preferred;
   }
 
   public void add(Item item) {
     bill.add(item);
-    if (regularCustomer) {
-      double d = item.getDiscount();
-      if (d > 0.0) {
-        discountCount++;
-        discountAmount += d;
-      }
+    if (preferred && item.getDiscount() > 0.0) {
+      discountCount++;
+      discountAmount += item.getDiscount();
     }
   }
 
   public double getTotal() {
-    double full = bill.getTotal();
-    if (!regularCustomer) return full;
-    return full - discountAmount;
+    double base = bill.getTotal();
+    return preferred ? base - discountAmount : base;
   }
 
   public int getDiscountCount() {
-    return regularCustomer ? discountCount : 0;
+    return preferred ? discountCount : 0;
   }
 
   public double getDiscountAmount() {
-    return regularCustomer ? discountAmount : 0.0;
+    return preferred ? discountAmount : 0.0;
   }
 
   public double getDiscountPercent() {
-    if (!regularCustomer) return 0.0;
-    double full = bill.getTotal();
-    if (full <= 0.0) return 0.0;
-    double paid = full - discountAmount;
-    return 100.0 - (paid * 100.0) / full;
+    double base = bill.getTotal();
+    if (!preferred || base <= 0.0) {
+      return 0.0;
+    }
+    return (discountAmount / base) * 100.0;
   }
 }
