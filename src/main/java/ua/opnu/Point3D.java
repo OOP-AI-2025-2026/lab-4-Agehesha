@@ -2,9 +2,7 @@ package ua.opnu;
 
 import ua.opnu.java.inheritance.point.Point;
 
-/**
- * 3D-точка на основе 2D-Point из библиотеки: добавляет координату z.
- */
+
 public class Point3D extends Point {
     private int z;
 
@@ -16,13 +14,11 @@ public class Point3D extends Point {
     public int getZ() { return z; }
     public void setZ(int z) { this.z = z; }
 
-    /** Сдвиг на (dx,dy,dz). Важно: вызвать именно super.move(dx, dy). */
     public void move(int dx, int dy, int dz) {
-        super.move(dx, dy);         // <-- ключевая правка против твоей ошибки "move(int,int) not found"
+        super.move(dx, dy); 
         this.z += dz;
     }
 
-    /** Евклидово расстояние до другой 3D-точки. */
     public double distance(Point3D p) {
         long dx = (long) getX() - p.getX();
         long dy = (long) getY() - p.getY();
