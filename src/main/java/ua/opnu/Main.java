@@ -1,6 +1,5 @@
 package ua.opnu;
 
-public final class Main {
   private Main() {
   }
 
