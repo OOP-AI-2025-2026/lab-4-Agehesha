@@ -1,42 +1,62 @@
-package ua.opnu;
 
-import ua.opnu.java.inheritance.bill.Employee;
-import ua.opnu.java.inheritance.bill.GroceryBill;
-import ua.opnu.java.inheritance.bill.Item;
+package org.example.lab4.discount;
+
+import org.example.lab4.docsmodel.Employee;
+import org.example.lab4.docsmodel.GroceryBill;
+import org.example.lab4.docsmodel.Item;
 
 public class DiscountBill extends GroceryBill {
-    private final boolean preferred;
-    private int discountCount = 0;
-    private double discountAmount = 0.0;
+    private final boolean regularCustomer;
 
-    public DiscountBill(Employee clerk, boolean preferred) {
+    public DiscountBill(Employee clerk, boolean regularCustomer) {
         super(clerk);
-        this.preferred = preferred;
+        this.regularCustomer = regularCustomer;
     }
 
     @Override
-    public void add(Item i) {
-        super.add(i);
-        if (preferred) {
-            double d = getItemDiscount(i);
-            if (d > 0) {
-                discountCount++;
-                discountAmount += d;
-            }
-        }
+    public void add(Item item) {
+        super.add(item);
     }
 
     @Override
     public double getTotal() {
-        double total = super.getTotal();
-        return preferred ? (total - discountAmount) : total;
+        if (!regularCustomer) return super.getTotal();
+        double sum = 0.0;
+        for (Item it : getItems()) {
+            double price = Math.max(0.0, it.getPrice());
+            double disc = Math.max(0.0, it.getDiscount());
+            if (disc > price) disc = price;
+            sum += (price - disc);
+        }
+        return sum;
     }
 
-    public int getDiscountCount() { return discountCount; }
-    public double getDiscountAmount() { return discountAmount; }
+
+    public int getDiscountCount() {
+        if (!regularCustomer) return 0;
+        int c = 0;
+        for (Item it : getItems()) {
+            double disc = Math.max(0.0, Math.min(it.getDiscount(), it.getPrice()));
+            if (disc > 0.0) c++;
+        }
+        return c;
+    }
+
+    public double getDiscountAmount() {
+        if (!regularCustomer) return 0.0;
+        double d = 0.0;
+        for (Item it : getItems()) {
+            double disc = Math.max(0.0, Math.min(it.getDiscount(), it.getPrice()));
+            d += disc;
+        }
+        return d;
+    }
 
     public double getDiscountPercent() {
-        double total = super.getTotal();
-        return total == 0.0 ? 0.0 : (discountAmount / total) * 100.0;
+        if (!regularCustomer) return 0.0;
+        double full = super.getTotal();
+        if (full <= 0.0) return 0.0;
+        double discounted = getTotal();
+        return 100.0 - (discounted * 100.0) / full;
     }
-
+}
