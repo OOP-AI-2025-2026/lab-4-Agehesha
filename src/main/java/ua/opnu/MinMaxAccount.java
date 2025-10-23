@@ -1,39 +1,51 @@
-
 package org.example.lab4.bank;
 
-import org.example.lab4.docsmodel.BankingAccount;
-import org.example.lab4.docsmodel.Startup;
+import ua.opnu.java.inheritance.account.Operation;
 
-public class MinMaxAccount extends BankingAccount {
-    private int min;
-    private int max;
+public class MinMaxAccount {
 
-    public MinMaxAccount(Startup s) {
-        super(s);
-        this.min = this.max = this.balanceCents;
+    private Operation minOperation;
+    private Operation maxOperation;
+
+    public MinMaxAccount() {
     }
 
-    public void apply(Operation op) {
-    if (op != null) {
-        op.apply(this);
-    }
-}
+    public void accept(Operation op) {
+        if (op == null) {
+            return;
+        }
 
- 
-    @Override
-    public void credit(int cents) {
-        super.credit(cents);
-        if (balanceCents > max) max = balanceCents;
-        if (balanceCents < min) min = balanceCents;
-    }
+        if (minOperation == null) {
+            minOperation = op;
+        } else {
+            minOperation = pickMin(minOperation, op);
+        }
 
-    @Override
-    public void debit(int cents) {
-        super.debit(cents);
-        if (balanceCents > max) max = balanceCents;
-        if (balanceCents < min) min = balanceCents;
+        if (maxOperation == null) {
+            maxOperation = op;
+        } else {
+            maxOperation = pickMax(maxOperation, op);
+        }
     }
 
-    public int getMin() { return min; }
-    public int getMax() { return max; }
+    public Operation getMinOperation() {
+        return minOperation;
+    }
+
+    public Operation getMaxOperation() {
+        return maxOperation;
+    }
+
+    private Operation pickMin(Operation a, Operation b) {
+        return cmp(a, b) <= 0 ? a : b;
+    }
+
+    private Operation pickMax(Operation a, Operation b) {
+        return cmp(a, b) >= 0 ? a : b;
+    }
+
+
+    private int cmp(Operation a, Operation b) {
+        return Integer.compare(a.hashCode(), b.hashCode());
+    }
 }
