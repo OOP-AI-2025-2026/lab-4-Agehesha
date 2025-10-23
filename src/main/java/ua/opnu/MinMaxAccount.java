@@ -1,51 +1,44 @@
-package org.example.lab4.bank;
+package ua.opnu;
 
-import ua.opnu.java.inheritance.account.Operation;
+import ua.opnu.java.inheritance.account.BankingAccount;
+import ua.opnu.java.inheritance.account.Credit;
+import ua.opnu.java.inheritance.account.Debit;
+import ua.opnu.java.inheritance.account.Startup;
 
-public class MinMaxAccount {
+public class MinMaxAccount extends BankingAccount {
+    private int min;
+    private int max;
 
-    private Operation minOperation;
-    private Operation maxOperation;
-
-    public MinMaxAccount() {
+    public MinMaxAccount(Startup s) {
+        super(s);
+        int start = getBalance();
+        this.min = start;
+        this.max = start;
     }
 
-    public void accept(Operation op) {
-        if (op == null) {
-            return;
-        }
-
-        if (minOperation == null) {
-            minOperation = op;
-        } else {
-            minOperation = pickMin(minOperation, op);
-        }
-
-        if (maxOperation == null) {
-            maxOperation = op;
-        } else {
-            maxOperation = pickMax(maxOperation, op);
-        }
+    @Override
+    public void credit(Credit c) {
+        super.credit(c);
+        updateMinMax();
     }
 
-    public Operation getMinOperation() {
-        return minOperation;
+    @Override
+    public void debit(Debit d) {
+        super.debit(d);
+        updateMinMax();
     }
 
-    public Operation getMaxOperation() {
-        return maxOperation;
+    private void updateMinMax() {
+        int b = getBalance();
+        if (b < min) min = b;
+        if (b > max) max = b;
     }
 
-    private Operation pickMin(Operation a, Operation b) {
-        return cmp(a, b) <= 0 ? a : b;
+    public int getMin() {
+        return min;
     }
 
-    private Operation pickMax(Operation a, Operation b) {
-        return cmp(a, b) >= 0 ? a : b;
-    }
-
-
-    private int cmp(Operation a, Operation b) {
-        return Integer.compare(a.hashCode(), b.hashCode());
+    public int getMax() {
+        return max;
     }
 }
