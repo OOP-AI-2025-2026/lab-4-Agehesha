@@ -13,6 +13,13 @@ public class MinMaxAccount extends BankingAccount {
         this.min = this.max = this.balanceCents;
     }
 
+    public void apply(Operation op) {
+    if (op != null) {
+        op.apply(this);
+    }
+}
+
+ 
     @Override
     public void credit(int cents) {
         super.credit(cents);
